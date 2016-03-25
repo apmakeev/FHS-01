@@ -16,7 +16,8 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <GroupBox Header="Текущие показатели кампании" Margin="4" Grid.Row="0" Grid.Column="0">
+        <GroupBox Header="Параметры кампании" Margin="4" Grid.Row="0" Grid.Column="0">
+
         </GroupBox>
         <GroupBox Header="Параметры запроса" Margin="4" Grid.Row="0" Grid.Column="1">
             <Grid>
@@ -31,20 +32,20 @@
                     <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
                 <Label Content="Начало периода" Grid.Row="0"/>
-                <xctk:DateTimePicker Name="dtPickerFrom" FormatString="dd MMMM yyyy HH:mm:ss" Grid.Row="1" Initialized="dtPickerFrom_Initialized" AutoCloseCalendar="True" Format="RFC1123" />
+                <xctk:DateTimePicker Name="dtPickerFrom" FormatString="dd MMMM yyyy HH:mm:ss" Grid.Row="1" Initialized="dtPickerFrom_Initialized" AutoCloseCalendar="True" Format="Custom" />
                 <Label Content="Конец периода" Grid.Row="2"/>
-                <xctk:DateTimePicker Name="dtPickerTo" FormatString="dd MMMM yyyy HH:mm:ss" Grid.Row="3" Initialized="dtPickerTo_Initialized" />
+                <xctk:DateTimePicker Name="dtPickerTo" FormatString="dd MMMM yyyy HH:mm:ss" Grid.Row="3" Initialized="dtPickerTo_Initialized" AutoCloseCalendar="True" Format="Custom" />
                 <Button Name="btnQuery" Grid.Row="5" Height="24" Width="64" HorizontalAlignment="Center" Click="btnQuery_Click">Обновить</Button>
             </Grid>
         </GroupBox>
         <GroupBox Header="ASR Отчёт" Margin="4" Grid.Row="1" Grid.ColumnSpan="2">
-            <DataGrid x:Name="dataGridASR"  AutoGenerateColumns="False" ItemsSource="{Binding Path=LoadDataBinding}">
+            <DataGrid x:Name="dataGridASR"  AutoGenerateColumns="False" ItemsSource="{Binding Path=LoadDataBinding}" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Path=Region}" Header="Регион" Width="100" IsReadOnly="True" />
-                    <DataGridTextColumn Binding="{Binding Path=Total}" Header="Всего" Width="100" IsReadOnly="True" />
-                    <DataGridTextColumn Binding="{Binding Path=Success}" Header="Успешных" Width="150" IsReadOnly="True" />
-                    <DataGridTextColumn Binding="{Binding Path=Connect}" Header="Соединено" Width="100" IsReadOnly="True" />
-                    <DataGridTextColumn Binding="{Binding Path=ASR}" Header="ASR" Width="120" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Path=Region}" Header="Регион" Width="*" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Path=Total}" Header="Всего" Width="*" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Path=Success}" Header="Успешных" Width="*" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Path=Connect}" Header="Соединено" Width="*" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Path=ASR}" Header="ASR" Width="*" IsReadOnly="True" />
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>
