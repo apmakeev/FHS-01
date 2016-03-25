@@ -1,0 +1,52 @@
+﻿<Window x:Class="ASR_03.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:ASR_03"
+        mc:Ignorable="d"
+        Title="ASR Показатели" Width="640" Height="480" Icon="service.png">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Текущие показатели кампании" Margin="4" Grid.Row="0" Grid.Column="0">
+        </GroupBox>
+        <GroupBox Header="Параметры запроса" Margin="4" Grid.Row="0" Grid.Column="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="40" />
+                </Grid.RowDefinitions>
+                <Label Content="Начало периода" Grid.Row="0"/>
+                <xctk:DateTimePicker Name="dtPickerFrom" FormatString="dd MMMM yyyy HH:mm:ss" Grid.Row="1" Initialized="dtPickerFrom_Initialized" AutoCloseCalendar="True" Format="RFC1123" />
+                <Label Content="Конец периода" Grid.Row="2"/>
+                <xctk:DateTimePicker Name="dtPickerTo" FormatString="dd MMMM yyyy HH:mm:ss" Grid.Row="3" Initialized="dtPickerTo_Initialized" />
+                <Button Name="btnQuery" Grid.Row="5" Height="24" Width="64" HorizontalAlignment="Center" Click="btnQuery_Click">Обновить</Button>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="ASR Отчёт" Margin="4" Grid.Row="1" Grid.ColumnSpan="2">
+            <DataGrid x:Name="dataGridASR"  AutoGenerateColumns="False" ItemsSource="{Binding Path=LoadDataBinding}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=Region}" Header="Регион" Width="100" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Path=Total}" Header="Всего" Width="100" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Path=Success}" Header="Успешных" Width="150" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Path=Connect}" Header="Соединено" Width="100" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Path=ASR}" Header="ASR" Width="120" IsReadOnly="True" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+    </Grid>
+</Window>
