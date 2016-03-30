@@ -24,8 +24,10 @@ namespace ASR_03
     /// </summary>
     public partial class MainWindow : Window
     {
-        // MySqlConnection conn = new MySqlConnection("server=192.162.89.38;port=6306;userid=admin;password=admin;database=analiticsb");
         MySqlConnection conn = new MySqlConnection("server=127.0.0.1;port=3306;userid=admin;password=admin;database=analiticsb");
+        // MySqlConnection conn = new MySqlConnection("server=198.18.235.238;port=9306;userid=admin;password=admin;database=analiticsb;Connect Timeout=300");
+        // MySqlConnection conn = new MySqlConnection("server=10.28.11.112;port=3306;userid=admin;password=admin;database=analiticsb;Connect Timeout=300");
+
         public MainWindow()
         {
             InitializeComponent();
@@ -52,8 +54,8 @@ namespace ASR_03
                 + "GROUP BY c.mediaGateLocation WITH ROLLUP";
 
             string sql_02 =
-                "SELECT IFNULL(cdr.code, 'Итого') AS 'Router', "
-                
+                "SELECT IFNULL(cdr.Filial,'Все филиалы') AS 'Branch', "
+                + "IFNULL(cdr.code, 'Все шлюзы') AS 'Router', "
                 + "SUM(IF(cdr.TypeOfCall = 'OUT', 1, 0)) AS 'Total', "
                 + "SUM(IF(cdr.TypeOfCall = 'OUT' AND cdr.result = 0, 1, 0)) AS 'Success', "
                 + "SUM(IF(cdr.TypeOfCall = 'OUT' AND cdr.result = 0 AND cdr.CompareCLI = 2, 1, 0)) AS 'NonMatching', "
@@ -63,8 +65,7 @@ namespace ASR_03
                 + "SUM(IF(cdr.TypeOfCall = 'OUT' AND cdr.result = 0 AND cdr.descr_name = 'False Answer Supervision', 1, 0)) AS 'FAS', "
                 + "SUM(IF(cdr.TypeOfCall='OUT',cdr.duration,0)) AS 'Duration', "
                 + "ROUND((SUM(IF(cdr.TypeOfCall = 'OUT' AND cdr.result = 0, 1, 0)) / SUM(IF(cdr.TypeOfCall = 'OUT', 1, 0)) * 100), 2) AS 'ASR', "
-                + "SUM(IF(cdr.TypeOfCall = 'IN', 1, 0)) AS 'InTotal' "
-                
+                + "SUM(IF(cdr.TypeOfCall = 'IN', 1, 0)) AS 'InTotal' "                
                 + "FROM ( SELECT "
                 + "IF(cm.Location_src = lm.hash, 'OUT', 'IN') 'TypeOfCall', "
                 + "lm.code, lm.Carrier, lm.Macroregion, lm.Filial, lm.City, lm.GW_type, lm.GW_str, "
@@ -85,7 +86,7 @@ namespace ASR_03
                 + "', '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE('"
                 + dtTo.ToString("yyyy-MM-dd  HH:mm:ss")
                 + "', '%Y-%m-%d %H:%i:%s')"
-                + ") cdr GROUP BY cdr.code ";
+                + ") cdr GROUP BY cdr.Filial, cdr.code WITH ROLLUP";
 
             // System.Windows.MessageBox.Show(sql_02);
 
@@ -112,14 +113,19 @@ namespace ASR_03
 
         private void dtPickerFrom_Initialized(object sender, EventArgs e)
         {
-            DateTime dtFrom = DateTime.Today;
-            dtPickerFrom.DefaultValue = dtFrom.AddDays(-1);
+            // DateTime dtFrom = DateTime.Today;
+            // dtPickerFrom.DefaultValue = dtFrom.AddDays(-1);
+            dtPickerFrom.DefaultValue = new DateTime(2016,03,24,0,0,0);
+            
+            
         }
 
         private void dtPickerTo_Initialized(object sender, EventArgs e)
         {
-            DateTime dtTo = DateTime.Today;
-            dtPickerTo.DefaultValue = dtTo.AddSeconds(-1);
+            // DateTime dtTo = DateTime.Today;
+            // dtPickerTo.DefaultValue = dtTo.AddSeconds(-1);
+            dtPickerTo.DefaultValue = new DateTime(2016, 03, 24, 23, 59, 59);
+            
         }
 
         private void btnQuery_Click(object sender, RoutedEventArgs e)
