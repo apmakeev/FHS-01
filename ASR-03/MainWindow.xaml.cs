@@ -54,7 +54,8 @@ namespace ASR_03
                 + "GROUP BY c.mediaGateLocation WITH ROLLUP";
 
             string sql_02 =
-                "SELECT IFNULL(cdr.Filial,'Все филиалы') AS 'Branch', "
+                "SELECT "
+                + "IFNULL(cdr.Filial,'Все филиалы') AS 'Branch', "
                 + "IFNULL(cdr.code, 'Все шлюзы') AS 'Router', "
                 + "SUM(IF(cdr.TypeOfCall = 'OUT', 1, 0)) AS 'Total', "
                 + "SUM(IF(cdr.TypeOfCall = 'OUT' AND cdr.result = 0, 1, 0)) AS 'Success', "
@@ -81,12 +82,13 @@ namespace ASR_03
                 + "INNER JOIN location_mg lm "
                 + "ON(cm.Location_src = lm.hash OR cm.Location_dst = lm.hash) "
                 + "INNER JOIN calldescrption cd "
-                + "ON cm.descr_index_leg2 = cd.descr_index "
+                + "ON cm.descr_index = cd.descr_index "
                 + "WHERE cm.timeStart BETWEEN STR_TO_DATE('"+ dtFrom.ToString("yyyy-MM-dd  HH:mm:ss")
                 + "', '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE('"
                 + dtTo.ToString("yyyy-MM-dd  HH:mm:ss")
                 + "', '%Y-%m-%d %H:%i:%s')"
-                + ") cdr GROUP BY cdr.Filial, cdr.code WITH ROLLUP";
+                // + ") cdr GROUP BY cdr.Filial, cdr.code";
+                + ") cdr GROUP BY cdr.code";
 
             // System.Windows.MessageBox.Show(sql_02);
 
@@ -99,6 +101,10 @@ namespace ASR_03
                 DataSet ds = new DataSet();
                 adp.Fill(ds, "LoadDataBinding");
                 dataGridASR.DataContext = ds;
+                // System.ComponentModel.ICollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ds.Tables[0].DefaultView);
+                // dataGridASR.ItemsSource = view;
+                // dataGridASR.ItemsSource = (CollectionView) CollectionViewSource.GetDefaultView(ds.Tables[0].DefaultView);
+
             }
             catch (MySqlException ex)
             {
