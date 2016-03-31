@@ -83,10 +83,8 @@ namespace ASR_03
                 + "ON(cm.Location_src = lm.hash OR cm.Location_dst = lm.hash) "
                 + "INNER JOIN calldescrption cd "
                 + "ON cm.descr_index = cd.descr_index "
-                + "WHERE cm.timeStart BETWEEN STR_TO_DATE('"+ dtFrom.ToString("yyyy-MM-dd  HH:mm:ss")
-                + "', '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE('"
-                + dtTo.ToString("yyyy-MM-dd  HH:mm:ss")
-                + "', '%Y-%m-%d %H:%i:%s')"
+                + "WHERE cm.timeStart BETWEEN STR_TO_DATE('"    + dtFrom.ToString("yyyy-MM-dd  HH:mm:ss")
+                + "', '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE('"   + dtTo.ToString("yyyy-MM-dd  HH:mm:ss")+ "', '%Y-%m-%d %H:%i:%s')"
                 // + ") cdr GROUP BY cdr.Filial, cdr.code";
                 + ") cdr GROUP BY cdr.code";
 
