@@ -26,9 +26,11 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type GroupItem}">
-                            <StackPanel>
-                            <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="12"/>
-                                <ItemsPresenter />
+                        <StackPanel>
+                            <Border BorderThickness="0 0 0 2" BorderBrush="Black">
+                                <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="12" />
+                            </Border>
+                            <ItemsPresenter />
                         </StackPanel>
                     </ControlTemplate>
                 </Setter.Value>
@@ -106,7 +108,7 @@
             </DataGrid>
         </GroupBox>
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4">
-            <TextBlock Text="Группировать по филиалам" Margin="0,0,10,0"/>
+            <TextBlock Text="По филиалам" Margin="0,0,10,0"/>
             <CheckBox Name="GroupCheckBox" Checked="GroupCheckBox_Checked" Unchecked="GroupCheckBox_Unchecked"/>
             <TextBlock Text="Только GSM" Margin="10,0,10,0"/>
             <CheckBox Name="FilterCheckBox" Checked="FilterCheckBox_Checked" Unchecked="FilterCheckBox_Unchecked"/>
