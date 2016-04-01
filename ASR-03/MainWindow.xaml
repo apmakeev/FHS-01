@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:ASR_03"
         mc:Ignorable="d"
         Title="ASR Показатели" Icon="service.png" MinWidth="640" MinHeight="480">
+
     <Window.Resources>
         <!--
         <Style x:Key="DGHeaderStyle" TargetType="{x:Type DataGrid}">
@@ -25,9 +26,9 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type GroupItem}">
-                        <StackPanel>
-                            <TextBlock Text="{Binding Branch}" />
-                            <ItemsPresenter />
+                            <StackPanel>
+                            <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="12"/>
+                                <ItemsPresenter />
                         </StackPanel>
                     </ControlTemplate>
                 </Setter.Value>
@@ -42,6 +43,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <GroupBox Header="Статистика" Margin="4" Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch">
             <!--
@@ -71,22 +73,24 @@
                 <Button Name="btnQuery" Grid.Row="5" Height="24" Width="64" HorizontalAlignment="Center" Click="btnQuery_Click">Обновить</Button>
             </Grid>
         </GroupBox>
-        
+
         <GroupBox Header="ASR Отчёт" Margin="4" Grid.Row="1" Grid.ColumnSpan="2">
             <DataGrid x:Name="dataGridASR" 
-                      AutoGenerateColumns="False" ItemsSource="{Binding Path=LoadDataBinding}" CanUserAddRows="False" CanUserSortColumns="True"
-                      HeadersVisibility="Column" AlternatingRowBackground="#FFF0F0F0">
-                <!--
+                      AutoGenerateColumns="False" ItemsSource="{Binding}" CanUserAddRows="False" CanUserSortColumns="True"
+                      HeadersVisibility="Column" GridLinesVisibility="All" AlternatingRowBackground="#FFF0F0F0">
+                <!-- AlternatingRowBackground="#FFF0F0F0" -->
                 <DataGrid.GroupStyle>
                     <GroupStyle ContainerStyle="{StaticResource GroupHeaderStyle}">
                         <GroupStyle.Panel>
-                            <ItemsPanelTemplate />
+                            <ItemsPanelTemplate>
+                                <DataGridRowsPresenter />
+                            </ItemsPanelTemplate>
                         </GroupStyle.Panel>
                     </GroupStyle>
                 </DataGrid.GroupStyle>
-                -->
+
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Path=Branch}" Header="Филиал" IsReadOnly="True" Width="*" MinWidth="128"/>
+                    <!-- <DataGridTextColumn Binding="{Binding Path=Branch}" Header="Филиал" IsReadOnly="True" Width="*"/> -->
                     <DataGridTextColumn Binding="{Binding Path=Router}" Header="Шлюз" IsReadOnly="True" Width="auto" MinWidth="128"/>
                     <DataGridTextColumn Binding="{Binding Path=Total}" Header="Всего" Width="*" IsReadOnly="True" />
                     <DataGridTextColumn Binding="{Binding Path=Success}" Header="Успешных" Width="*" IsReadOnly="True" />
@@ -101,5 +105,11 @@
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4">
+            <TextBlock Text="Группировать по филиалам" Margin="0,0,10,0"/>
+            <CheckBox Name="GroupCheckBox" Checked="GroupCheckBox_Checked" Unchecked="GroupCheckBox_Unchecked"/>
+            <TextBlock Text="Только GSM" Margin="10,0,10,0"/>
+            <CheckBox Name="FilterCheckBox" Checked="FilterCheckBox_Checked" Unchecked="FilterCheckBox_Unchecked"/>
+        </StackPanel>
     </Grid>
 </Window>

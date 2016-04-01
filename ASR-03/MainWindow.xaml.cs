@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Data;
 using MySql.Data.MySqlClient;
 using Xceed.Wpf;
+using System.ComponentModel;
 
 namespace ASR_03
 {
@@ -57,6 +58,7 @@ namespace ASR_03
                 "SELECT "
                 + "IFNULL(cdr.Filial,'Все филиалы') AS 'Branch', "
                 + "IFNULL(cdr.code, 'Все шлюзы') AS 'Router', "
+                + "cdr.GW_type, "
                 + "SUM(IF(cdr.TypeOfCall = 'OUT', 1, 0)) AS 'Total', "
                 + "SUM(IF(cdr.TypeOfCall = 'OUT' AND cdr.result = 0, 1, 0)) AS 'Success', "
                 + "SUM(IF(cdr.TypeOfCall = 'OUT' AND cdr.result = 0 AND cdr.CompareCLI = 2, 1, 0)) AS 'NonMatching', "
@@ -84,7 +86,7 @@ namespace ASR_03
                 + "INNER JOIN calldescrption cd "
                 + "ON cm.descr_index = cd.descr_index "
                 + "WHERE cm.timeStart BETWEEN STR_TO_DATE('"    + dtFrom.ToString("yyyy-MM-dd  HH:mm:ss")
-                + "', '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE('"   + dtTo.ToString("yyyy-MM-dd  HH:mm:ss")+ "', '%Y-%m-%d %H:%i:%s')"
+                + "', '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE('"   + dtTo.ToString("yyyy-MM-dd  HH:mm:ss")+ "', '%Y-%m-%d %H:%i:%s') order by lm.Filial"
                 // + ") cdr GROUP BY cdr.Filial, cdr.code";
                 + ") cdr GROUP BY cdr.code";
 
@@ -96,13 +98,23 @@ namespace ASR_03
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(sql_02, conn);
                 MySqlDataAdapter adp = new MySqlDataAdapter(cmd);
-                DataSet ds = new DataSet();
-                adp.Fill(ds, "LoadDataBinding");
-                dataGridASR.DataContext = ds;
-                // System.ComponentModel.ICollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ds.Tables[0].DefaultView);
-                // dataGridASR.ItemsSource = view;
-                // dataGridASR.ItemsSource = (CollectionView) CollectionViewSource.GetDefaultView(ds.Tables[0].DefaultView);
+                // DataSet ds = new DataSet();
+                // adp.Fill(ds, "LoadDataBinding");
+                // dataGridASR.DataContext = ds;
 
+                DataTable dt = new DataTable();
+                adp.Fill(dt);
+                dataGridASR.DataContext = dt;
+
+                ICollectionView view = CollectionViewSource.GetDefaultView(dataGridASR.DataContext);
+                view.SortDescriptions.Add(new SortDescription("Branch", ListSortDirection.Ascending));
+                dataGridASR.ItemsSource = view;
+
+                // ICollectionView view = CollectionViewSource.GetDefaultView(dt);
+                // ICollectionView view = CollectionViewSource.GetDefaultView(dataGridASR.DataContext);
+                // view.GroupDescriptions.Add(new PropertyGroupDescription("Branch"));
+                // dataGridASR.DataContext = view;
+                // dataGridASR.ItemsSource = view;
             }
             catch (MySqlException ex)
             {
@@ -137,51 +149,29 @@ namespace ASR_03
             UpdateASR();
         }
 
-        /*
-                private void dataGridASR_Sorting(object sender, DataGridSortingEventArgs e)
-                {
-                    //System.Windows.MessageBox.Show("Sorting!");
+        private void GroupCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(dataGridASR.DataContext);
+            view.GroupDescriptions.Clear();
+            view.GroupDescriptions.Add(new PropertyGroupDescription("Branch"));
+            dataGridASR.AlternatingRowBackground = null;
+        }
 
-                    DataRowView rv = (DataRowView)dataGridASR.Items[dataGridASR.Items.Count - 1];
-                    if (rv[0].ToString().Contains("Итого:"))
-                    {
-                        DataView dv = dataGridASR.Items.SourceCollection as DataView;
-                        rv.Delete();
-                    }
-                    bool sorted_aborted = e.Handled;
-                }
+        private void GroupCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(dataGridASR.DataContext);
+            view.GroupDescriptions.Clear();
+            dataGridASR.AlternatingRowBackground = new SolidColorBrush(Color.FromArgb(100,250,250,250));
+        }
 
-                private void dataGridASR_LayoutUpdated(object sender, EventArgs e)
-                {
-                    if (!sorted_aborted)
-                    {
-                        //method to add totals computation  
-                        ShowProductSorted();
-                        bool sorted_aborted = true;
-                    }
-                    else
-                    {
-                        //DisableLastRow();
-                    }
-                }
+        private void FilterCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            ((DataTable)dataGridASR.DataContext).DefaultView.RowFilter = "GW_type='mobile'";
+        }
 
-                private void ShowProductSorted()
-                {
-                    Total = 0;
-                    DataTable dt = new DataTable();
-                    dt = dvCopy.ToTable();
-                    dvCopy = null;
-                    dgProducts.ItemsSource = null;
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        Total = Total + Convert.ToDouble(row[1].ToString());
-                    }
-                    DataRow dr1 = dt.NewRow();
-                    dr1[1] = Total;
-                    dt.Rows.Add(dr1);
-                    yourdatagrid.ItemsSource = dt.AsDataView();
-                }
-
-        */
+        private void FilterCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ((DataTable)dataGridASR.DataContext).DefaultView.RowFilter = "";
+        }
     }
 }
